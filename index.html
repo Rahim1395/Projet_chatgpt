@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire ChatGPT</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #ff8c00; /* Couleur orange */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #d17f00; /* Couleur orange plus foncée au survol */
+        }
+
+        #resultat {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="formulaireChatGPT">
+        <label for="nom">Nom:</label>
+        <input type="text" id="nom" name="nom" required><br>
+
+        <label for="prenom">Prénom:</label>
+        <input type="text" id="prenom" name="prenom" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="recherche">Recherche:</label>
+        <input type="text" id="recherche" name="recherche" required><br>
+
+        <input type="submit" value="Envoyer">
+    </form>
+
+    <div id="resultat">
+        <!-- Le résultat de ChatGPT sera affiché ici -->
+    </div>
+
+    <script>
+        document.getElementById('formulaireChatGPT').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            try {
+                const response = await fetch('/traiterFormulaire', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nom: document.getElementById('nom').value,
+                        prenom: document.getElementById('prenom').value,
+                        email: document.getElementById('email').value,
+                        recherche: document.getElementById('recherche').value,
+                    }),
+                });
+
+                const data = await response.json();
+
+                // Afficher la réponse de l'API de ChatGPT
+                document.getElementById('resultat').innerText = `Réponse de ChatGPT: ${data.reponseChatGPT}`;
+
+                // Réinitialiser le formulaire
+                document.getElementById('formulaireChatGPT').reset();
+            } catch (error) {
+                console.error('Erreur lors de la soumission du formulaire:', error);
+            }
+        });
+    </script>
+
+</body>
+</html>
